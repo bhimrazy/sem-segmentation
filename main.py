@@ -92,7 +92,7 @@ def main():
     # model path
     model_path = "artifacts/model.pth"
     # save model
-    torch.save(model, "model.pth")
+    torch.save(model, model_path)
 
     # # load model
     model = torch.load(model_path)
