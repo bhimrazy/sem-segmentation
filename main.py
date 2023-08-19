@@ -132,7 +132,7 @@ def main():
     fig = plot_predictions(images, masks, pred, "Val", cfg["experiment"]["batch_size"])
 
     # Save the plot to a file
-    predictions = "artifacts/predictions.png"
+    predictions = "artifacts/valid-predictions.png"
     fig.savefig(predictions)
     wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
     mlflow.log_artifact(predictions)
@@ -149,7 +149,7 @@ def main():
     fig = plot_predictions(images, masks, pred, "Test", cfg["experiment"]["batch_size"])
 
     # Save the plot to a file
-    predictions = "artifacts/predictions.png"
+    predictions = "artifacts/test-predictions.png"
     fig.savefig(predictions)
     wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
     mlflow.log_artifact(predictions)
