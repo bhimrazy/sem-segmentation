@@ -1,3 +1,4 @@
+import torch
 import matplotlib.pyplot as plt
 
 
@@ -7,7 +8,6 @@ def plot_predictions(images, masks, pred, BATCH, figsize=(20, 10)):
 
     fig.suptitle("Predictions", fontsize=16)
     fig.tight_layout()
-    
 
     # Plot the images in the subplots
     for i, ax in enumerate(ax1):
@@ -16,8 +16,7 @@ def plot_predictions(images, masks, pred, BATCH, figsize=(20, 10)):
         image = image.numpy().transpose((1, 2, 0))
         ax.imshow(image, cmap="gray")
         ax.title.set_text("Images")
-        ax.axis('off')
-
+        ax.axis("off")
 
     # Plot the images in the subplots
     for i, ax in enumerate(ax2):
@@ -26,16 +25,16 @@ def plot_predictions(images, masks, pred, BATCH, figsize=(20, 10)):
         image = image.numpy().transpose((1, 2, 0))
         ax.imshow(image, cmap="gray")
         ax.title.set_text("Masks")
-        ax.axis('off')
+        ax.axis("off")
 
     # Plot the images in the subplots
     for i, ax in enumerate(ax3):
         # Get the image and label for the current subplot
-        image = pred[i].cpu()
-        # image = torch.where(image>0.5, torch.tensor(1), torch.tensor(0))
+        image = torch.sigmoid(pred[i]).cpu()
+        image = torch.where(image > 0.5, torch.tensor(1), torch.tensor(0))
         image = image.numpy().transpose((1, 2, 0))
         ax.imshow(image, cmap="gray")
         ax.title.set_text("Predicted Masks")
-        ax.axis('off')
+        ax.axis("off")
 
     return plt

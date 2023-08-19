@@ -103,7 +103,7 @@ def main():
     # predict
     with torch.no_grad():
         model.eval()
-        pred = torch.sigmoid(model(images))
+        pred = model(images)
 
     # plot
     fig = plot_predictions(images, masks, pred, cfg["experiment"]["batch_size"])

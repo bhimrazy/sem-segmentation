@@ -17,7 +17,8 @@ class RudrakshaSegModel(LightningModule):
             strides=(2, 2, 2, 2),
             num_res_units=2,
         )
-        self.loss_fn = DiceLoss(sigmoid=True)
+        # self.loss_fn = DiceLoss(sigmoid=True)
+        self.loss_fn = torch.nn.CrossEntropyLoss()
         self.metric = DiceMetric(include_background=False, reduction="mean")
 
         self.validation_step_outputs = []
