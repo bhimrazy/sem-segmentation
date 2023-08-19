@@ -1,6 +1,6 @@
 import torch
 from lightning import LightningModule
-from monai.losses import DiceLoss
+from monai.losses import DiceLoss, DiceFocalLoss
 from monai.metrics import DiceMetric
 from monai.networks.nets import UNet
 
@@ -18,7 +18,7 @@ class RudrakshaSegModel(LightningModule):
             num_res_units=2,
         )
         # self.loss_fn = DiceLoss(sigmoid=True)
-        self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.loss_fn = DiceFocalLoss(sigmoid=True)
         self.metric = DiceMetric(include_background=False, reduction="mean")
 
         self.validation_step_outputs = []
