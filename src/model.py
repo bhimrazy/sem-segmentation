@@ -17,8 +17,11 @@ class RudrakshaSegModel(LightningModule):
             strides=(2, 2, 2, 2),
             num_res_units=2,
         )
-        self.loss_fn = DiceLoss()
+        self.loss_fn = DiceLoss(sigmoid=True)
         self.metric = DiceMetric(include_background=False, reduction="mean")
+
+        self.validation_step_outputs = []
+        self.test_step_outputs = []
 
     def forward(self, x):
         return self.model(x)
@@ -27,40 +30,40 @@ class RudrakshaSegModel(LightningModule):
         x, y = batch
         y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
-        dice_score = self.metric(y_hat, y)
-        self.log_dict(
-            {"train_loss": loss, "train_dice": dice_score.mean()},
-            prog_bar=True,
-            on_step=True,
-            on_epoch=True,
-        )
+        self.log("train_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
         y_pred = self(x)
         loss = self.loss_fn(y_pred, y)
-        dice_score = self.metric(y_pred, y)
-        self.log_dict(
-            {"val_loss": loss, "val_dice": dice_score.mean()},
-            prog_bar=True,
-            on_step=False,
-            on_epoch=True,
-        )
-        return dice_score
+        self.log("val_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
+        self.metric(y_pred, y)
+        self.validation_step_outputs.append(loss)
+        return loss
+
+    def on_validation_epoch_end(self):
+        avg_val_loss = torch.stack(self.validation_step_outputs).mean()
+        dice_metric = self.metric.aggregate().item()
+        self.log("avg_val_loss", avg_val_loss)
+        self.log("val_dice", dice_metric)
+        self.validation_step_outputs.clear()
 
     def test_step(self, batch, batch_idx):
         x, y = batch
         y_pred = self(x)
         loss = self.loss_fn(y_pred, y)
-        dice_score = self.metric(y_pred, y)
-        self.log_dict(
-            {"test_loss": loss, "test_dice": dice_score.mean()},
-            prog_bar=True,
-            on_step=False,
-            on_epoch=True,
-        )
-        return dice_score
+        self.log("test_loss", loss)
+        self.metric(y_pred, y)
+        self.test_step_outputs.append(loss)
+        return loss
+
+    def on_test_epoch_end(self):
+        avg_test_loss = torch.stack(self.test_step_outputs).mean()
+        test_dice_metric = self.metric.aggregate().item()
+        self.log("avg_test_loss", avg_test_loss)
+        self.log("test_dice", test_dice_metric)
+        self.test_step_outputs.clear()
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
