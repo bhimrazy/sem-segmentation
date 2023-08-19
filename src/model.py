@@ -69,8 +69,18 @@ class RudrakshaSegModel(LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
 
-        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, patience=2, threshold=0.001, mode="min"
+        # Add lr scheduler
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="min",  # or "max" if you're maximizing a metric
+            factor=0.5,  # factor by which the learning rate will be reduced
+            patience=5,  # number of epochs with no improvement after which learning rate will be reduced
+            verbose=True,  # print a message when learning rate is reduced
+            threshold=0.001,  # threshold for measuring the new optimum, to only focus on significant changes
         )
 
-        return [optimizer], [lr_scheduler]
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": scheduler,
+            "monitor": "val_loss",  # monitor validation loss
+        }
