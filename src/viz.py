@@ -2,11 +2,11 @@ import torch
 import matplotlib.pyplot as plt
 
 
-def plot_predictions(images, masks, pred, BATCH, figsize=(20, 10)):
+def plot_predictions(images, masks, pred, BATCH, title="Test", figsize=(20, 10)):
     # Create a figure with a grid of subplots
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=3, ncols=BATCH, figsize=figsize)
 
-    fig.suptitle("Predictions", fontsize=16)
+    fig.suptitle(f"{title} Data Predictions", fontsize=16)
     fig.tight_layout()
 
     # Plot the images in the subplots

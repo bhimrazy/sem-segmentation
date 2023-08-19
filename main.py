@@ -102,6 +102,42 @@ def main():
     model = torch.load(model_path)
 
     data_module.setup()
+    images, masks = next(iter(data_module.train_dataloader()))
+
+    # predict
+    with torch.no_grad():
+        model.eval()
+        pred = model(images)
+
+    # plot
+    fig = plot_predictions(
+        images, masks, pred, "Train", cfg["experiment"]["batch_size"]
+    )
+
+    # Save the plot to a file
+    predictions = "artifacts/train-predictions.png"
+    fig.savefig(predictions)
+    wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
+    mlflow.log_artifact(predictions)
+    fig.close()
+
+    images, masks = next(iter(data_module.val_dataloader()))
+
+    # predict
+    with torch.no_grad():
+        model.eval()
+        pred = model(images)
+
+    # plot
+    fig = plot_predictions(images, masks, pred, "Val", cfg["experiment"]["batch_size"])
+
+    # Save the plot to a file
+    predictions = "artifacts/predictions.png"
+    fig.savefig(predictions)
+    wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
+    mlflow.log_artifact(predictions)
+    fig.close()
+
     images, masks = next(iter(data_module.test_dataloader()))
 
     # predict
@@ -110,7 +146,7 @@ def main():
         pred = model(images)
 
     # plot
-    fig = plot_predictions(images, masks, pred, cfg["experiment"]["batch_size"])
+    fig = plot_predictions(images, masks, pred, "Test", cfg["experiment"]["batch_size"])
 
     # Save the plot to a file
     predictions = "artifacts/predictions.png"
