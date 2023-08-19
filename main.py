@@ -2,6 +2,7 @@ import argparse
 from os.path import join
 
 import mlflow
+from lightning import seed_everything
 from lightning.pytorch import Trainer
 from lightning.pytorch.loggers import MLFlowLogger
 
@@ -22,6 +23,9 @@ def main():
     args = parser.parse_args()
     # load config
     cfg = load_config(args.config)
+
+    # seed
+    seed_everything(cfg["experiment"]["random_seed"])
 
     dataset_path = join(cfg["data"]["data_dir"], cfg["data"]["dataset_folder"])
 
@@ -46,10 +50,13 @@ def main():
         y_test,
         cfg["experiment"]["batch_size"],
         cfg["experiment"]["num_workers"],
+        cfg["experiment"]["image_size"],
     )
 
     # model
-    model = RudrakshaSegModel(cfg["model"]["num_classes"])
+    model = RudrakshaSegModel(
+        num_classes=cfg["model"]["num_classes"], lr=cfg["experiment"]["lr"]
+    )
 
     # mlflow
     mlflow.set_experiment(cfg["experiment"]["name"])
@@ -69,6 +76,8 @@ def main():
     # train
     trainer.fit(model, data_module)
 
+    # test
+    trainer.test(model, data_module)
 
 if __name__ == "__main__":
     main()
