@@ -1,0 +1,9 @@
+*.csv
+*.txt
+*.zip
+*.png
+*.jpg
+*.pth
+
+__pycache__
+__MACOSX

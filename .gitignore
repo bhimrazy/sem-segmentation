@@ -169,4 +169,3 @@ flagged
 mlruns
 lightning_logs
 wandb
-artifacts
