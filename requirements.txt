@@ -4,4 +4,6 @@ sklearn
 lightning
 monai
 mlflow
+wandb
 python-decouple
+segmentation-models-pytorch
