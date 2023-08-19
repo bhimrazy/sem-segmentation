@@ -1,16 +1,18 @@
 import argparse
 from os.path import join
 
-import torch
 import mlflow
+import torch
 from lightning import seed_everything
 from lightning.pytorch import Trainer
-from lightning.pytorch.loggers import MLFlowLogger
+from lightning.pytorch.loggers import MLFlowLogger, WandbLogger
 
+import wandb
 from src.dataset import RudrakshaDataModule
 from src.io import load_config, load_data
 from src.model import RudrakshaSegModel
 from src.utils import split_data
+from src.viz import plot_predictions
 
 # argument parser
 parser = argparse.ArgumentParser(description="Main script pipeline")
@@ -61,14 +63,21 @@ def main():
 
     # mlflow
     mlflow.set_experiment(cfg["experiment"]["name"])
+    mlflow.set_tag("model", cfg["model"]["name"])
     mlflow.pytorch.autolog()
+
+    # Create WandB and MLflow loggers
+    wandb_logger = WandbLogger(
+        project=cfg["experiment"]["name"], log_model=True, tags=[cfg["model"]["name"]]
+    )
+    mlflow_logger = MLFlowLogger(experiment_name=cfg["experiment"]["name"])
 
     # trainer
     trainer = Trainer(
         max_epochs=cfg["experiment"]["num_epochs"],
         accelerator=cfg["experiment"]["accelerator"],
         devices=cfg["experiment"]["devices"],
-        logger=MLFlowLogger(),
+        logger=[wandb_logger, mlflow_logger],
         log_every_n_steps=2,
         check_val_every_n_epoch=1,
         callbacks=[],
@@ -80,8 +89,32 @@ def main():
     # test
     trainer.test(model, data_module)
 
+    # model path
+    model_path = "artifacts/model.pth"
     # save model
     torch.save(model, "model.pth")
+
+    # # load model
+    model = torch.load(model_path)
+
+    data_module.setup()
+    images, masks = next(iter(data_module.test_dataloader()))
+
+    # predict
+    with torch.no_grad():
+        model.eval()
+        pred = torch.sigmoid(model(images))
+
+    # plot
+    fig = plot_predictions(images, masks, pred, cfg["experiment"]["batch_size"])
+
+    # Save the plot to a file
+    predictions = "artifacts/predictions.png"
+    fig.savefig(predictions)
+    wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
+    mlflow.log_artifact(predictions)
+    fig.close()
+
 
 if __name__ == "__main__":
     main()
