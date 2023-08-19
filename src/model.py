@@ -4,18 +4,26 @@ from monai.losses import DiceLoss, DiceFocalLoss, GeneralizedDiceLoss
 from monai.metrics import DiceMetric
 from monai.networks.nets import UNet
 
+import segmentation_models_pytorch as smp
+
 
 class RudrakshaSegModel(LightningModule):
     def __init__(self, num_classes, lr=1e-4):
         super().__init__()
         self.lr = lr
-        self.model = UNet(
+        # self.model = UNet(
+        #     in_channels=3,
+        #     out_channels=num_classes,
+        #     spatial_dims=2,
+        #     channels=(16, 32, 64, 128, 256),
+        #     strides=(2, 2, 2, 2),
+        #     num_res_units=2,
+        # )
+        self.model = smp.DeepLabV3Plus(
+            encoder_name="resnet18",
+            encoder_weights="imagenet",
             in_channels=3,
-            out_channels=num_classes,
-            spatial_dims=2,
-            channels=(16, 32, 64, 128, 256),
-            strides=(2, 2, 2, 2),
-            num_res_units=2,
+            classes=num_classes,
         )
         # self.loss_fn = DiceLoss(sigmoid=True)
         self.loss_fn = GeneralizedDiceLoss(sigmoid=True)
