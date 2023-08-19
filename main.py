@@ -6,6 +6,7 @@ import torch
 from lightning import seed_everything
 from lightning.pytorch import Trainer
 from lightning.pytorch.loggers import MLFlowLogger, WandbLogger
+from lightning.pytorch.callbacks import LearningRateMonitor
 
 import wandb
 from src.dataset import RudrakshaDataModule
@@ -72,6 +73,9 @@ def main():
     )
     mlflow_logger = MLFlowLogger(experiment_name=cfg["experiment"]["name"])
 
+    # learning rate monitor
+    lr_monitor = LearningRateMonitor(logging_interval="step")
+
     # trainer
     trainer = Trainer(
         max_epochs=cfg["experiment"]["num_epochs"],
@@ -80,7 +84,7 @@ def main():
         logger=[wandb_logger, mlflow_logger],
         log_every_n_steps=2,
         check_val_every_n_epoch=1,
-        callbacks=[],
+        callbacks=[lr_monitor],
     )
 
     # train

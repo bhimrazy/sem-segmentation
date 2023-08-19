@@ -68,12 +68,9 @@ class RudrakshaSegModel(LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
-        # add lr scheduler
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer, patience=2, threshold=0.001, mode="min"
         )
-        return {
-            "optimizer": optimizer,
-            "lr_scheduler": scheduler,
-            "monitor": "avg_val_loss",
-        }
+
+        return [optimizer], [lr_scheduler]
