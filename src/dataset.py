@@ -34,6 +34,7 @@ class RudrakshaDataModule(LightningDataModule):
         y_test,
         batch_size=4,
         num_workers=4,
+        image_size=256,
     ):
         super().__init__()
         self.X_train = X_train
@@ -46,7 +47,7 @@ class RudrakshaDataModule(LightningDataModule):
         self.num_workers = num_workers
 
         self.transform = transforms.Compose(
-            [transforms.Resize((256, 256)), transforms.ToTensor()]
+            [transforms.Resize((image_size, image_size)), transforms.ToTensor()]
         )
 
     def setup(self, stage=None):
