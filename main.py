@@ -111,7 +111,7 @@ def main():
 
     # plot
     fig = plot_predictions(
-        images, masks, pred, "Train", cfg["experiment"]["batch_size"]
+        images, masks, pred, cfg["experiment"]["batch_size"], title="Train"
     )
 
     # Save the plot to a file
@@ -129,7 +129,9 @@ def main():
         pred = model(images)
 
     # plot
-    fig = plot_predictions(images, masks, pred, "Val", cfg["experiment"]["batch_size"])
+    fig = plot_predictions(
+        images, masks, pred, cfg["experiment"]["batch_size"], title="Val"
+    )
 
     # Save the plot to a file
     predictions = "artifacts/valid-predictions.png"
@@ -146,7 +148,9 @@ def main():
         pred = model(images)
 
     # plot
-    fig = plot_predictions(images, masks, pred, "Test", cfg["experiment"]["batch_size"])
+    fig = plot_predictions(
+        images, masks, pred, cfg["experiment"]["batch_size"], title="Test"
+    )
 
     # Save the plot to a file
     predictions = "artifacts/test-predictions.png"
