@@ -3,7 +3,7 @@ torchvision
 scikit-learn
 lightning
 monai
-mlflow
+mlflow==2.4
 wandb
 python-decouple
 segmentation-models-pytorch
