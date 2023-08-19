@@ -1,0 +1,7 @@
+torch
+torchvision
+sklearn
+lightning
+monai
+mlflow
+python-decouple
