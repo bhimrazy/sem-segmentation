@@ -1,6 +1,6 @@
 torch
 torchvision
-sklearn
+scikit-learn
 lightning
 monai
 mlflow
