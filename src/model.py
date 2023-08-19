@@ -17,8 +17,8 @@ class RudrakshaSegModel(LightningModule):
             strides=(2, 2, 2, 2),
             num_res_units=2,
         )
-        self.loss_fn = DiceLoss(sigmoid=True)
-        self.metric = DiceMetric(include_background=False)
+        self.loss_fn = DiceLoss()
+        self.metric = DiceMetric(include_background=False, reduction="mean")
 
     def forward(self, x):
         return self.model(x)
@@ -43,6 +43,19 @@ class RudrakshaSegModel(LightningModule):
         dice_score = self.metric(y_pred, y)
         self.log_dict(
             {"val_loss": loss, "val_dice": dice_score.mean()},
+            prog_bar=True,
+            on_step=False,
+            on_epoch=True,
+        )
+        return dice_score
+
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+        y_pred = self(x)
+        loss = self.loss_fn(y_pred, y)
+        dice_score = self.metric(y_pred, y)
+        self.log_dict(
+            {"test_loss": loss, "test_dice": dice_score.mean()},
             prog_bar=True,
             on_step=False,
             on_epoch=True,
