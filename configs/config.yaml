@@ -1,0 +1,18 @@
+project: Rudrakhsa Segmentation Project
+data:
+  data_dir: data
+  dataset_folder: RudrakshaDataset
+
+
+model:
+  num_classes: 1
+
+experiment:
+  name: Rudraksha Segmentation
+  batch_size: 8
+  split_ratio: 0.2
+  num_workers: 8
+  num_epochs: 10
+  accelerator: mps
+  devices: auto
+  random_seed: 42
