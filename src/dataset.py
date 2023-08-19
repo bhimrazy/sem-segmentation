@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
 
-class RudrakshaDataset:
+class RudrakshaDataset(Dataset):
     def __init__(self, images, masks, transform=None):
         self.images = images
         self.masks = masks
