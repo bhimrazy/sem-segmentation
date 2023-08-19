@@ -1,6 +1,7 @@
 import argparse
 from os.path import join
 
+import torch
 import mlflow
 from lightning import seed_everything
 from lightning.pytorch import Trainer
@@ -78,6 +79,9 @@ def main():
 
     # test
     trainer.test(model, data_module)
+
+    # save model
+    torch.save(model, "model.pth")
 
 if __name__ == "__main__":
     main()
