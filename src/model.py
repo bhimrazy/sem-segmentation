@@ -25,7 +25,6 @@ class RudrakshaSegModel(LightningModule):
             in_channels=3,
             classes=num_classes,
         )
-        # self.loss_fn = DiceLoss(sigmoid=True)
         self.loss_fn = GeneralizedDiceLoss(sigmoid=True)
         self.dice_metric = DiceMetric(include_background=False, reduction="mean")
         self.iou_metric = MeanIoU(include_background=False, reduction="mean")
@@ -41,19 +40,7 @@ class RudrakshaSegModel(LightningModule):
         y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
         self.log("train_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
-        y_hat = y_hat.sigmoid().round()
-        self.dice_metric(y_hat, y)
-        self.iou_metric(y_hat, y)
         return loss
-
-    def on_train_epoch_end(self):
-        # dice_metric = self.dice_metric.aggregate().item()
-        # iou_metric = self.iou_metric.aggregate().item()
-        # self.log("train_dice", dice_metric)
-        # self.log("train_iou", iou_metric)
-        # self.dice_metric.reset()
-        # self.iou_metric.reset()
-        self._on_epoch_end("train")
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
