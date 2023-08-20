@@ -1,7 +1,7 @@
 import torch
 from lightning import LightningModule
 from monai.losses import DiceLoss, DiceFocalLoss, GeneralizedDiceLoss
-from monai.metrics import DiceMetric
+from monai.metrics import DiceMetric, MeanIoU
 from monai.networks.nets import UNet
 
 import segmentation_models_pytorch as smp
@@ -27,7 +27,8 @@ class RudrakshaSegModel(LightningModule):
         )
         # self.loss_fn = DiceLoss(sigmoid=True)
         self.loss_fn = GeneralizedDiceLoss(sigmoid=True)
-        self.metric = DiceMetric(include_background=False, reduction="mean")
+        self.dice_metric = DiceMetric(include_background=False, reduction="mean")
+        self.iou_metric = MeanIoU(include_background=False, reduction="mean")
 
         self.validation_step_outputs = []
         self.test_step_outputs = []
@@ -40,22 +41,41 @@ class RudrakshaSegModel(LightningModule):
         y_hat = self.forward(x)
         loss = self.loss_fn(y_hat, y)
         self.log("train_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
+        y_hat = y_hat.sigmoid().round()
+        self.dice_metric(y_hat, y)
+        self.iou_metric(y_hat, y)
         return loss
+
+    def on_train_epoch_end(self):
+        # dice_metric = self.dice_metric.aggregate().item()
+        # iou_metric = self.iou_metric.aggregate().item()
+        # self.log("train_dice", dice_metric)
+        # self.log("train_iou", iou_metric)
+        # self.dice_metric.reset()
+        # self.iou_metric.reset()
+        self._on_epoch_end("train")
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
         y_pred = self(x)
         loss = self.loss_fn(y_pred, y)
         self.log("val_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
-        self.metric(y_pred, y)
         self.validation_step_outputs.append(loss)
+        y_pred = y_pred.sigmoid().round()
+        self.dice_metric(y_pred, y)
+        self.iou_metric(y_pred, y)
         return loss
 
     def on_validation_epoch_end(self):
-        avg_val_loss = torch.stack(self.validation_step_outputs).mean()
-        dice_metric = self.metric.aggregate().item()
-        self.log("avg_val_loss", avg_val_loss)
-        self.log("val_dice", dice_metric)
+        # avg_val_loss = torch.stack(self.validation_step_outputs).mean()
+        # dice_metric = self.dice_metric.aggregate().item()
+        # iou_metric = self.iou_metric.aggregate().item()
+        # self.log("avg_val_loss", avg_val_loss)
+        # self.log("val_dice", dice_metric)
+        # self.log("val_iou", iou_metric)
+        # self.dice_metric.reset()
+        # self.iou_metric.reset()
+        self._on_epoch_end("val", self.validation_step_outputs)
         self.validation_step_outputs.clear()
 
     def test_step(self, batch, batch_idx):
@@ -63,16 +83,36 @@ class RudrakshaSegModel(LightningModule):
         y_pred = self(x)
         loss = self.loss_fn(y_pred, y)
         self.log("test_loss", loss)
-        self.metric(y_pred, y)
         self.test_step_outputs.append(loss)
+        y_pred = y_pred.sigmoid().round()
+        self.dice_metric(y_pred, y)
+        self.iou_metric(y_pred, y)
         return loss
 
     def on_test_epoch_end(self):
-        avg_test_loss = torch.stack(self.test_step_outputs).mean()
-        test_dice_metric = self.metric.aggregate().item()
-        self.log("avg_test_loss", avg_test_loss)
-        self.log("test_dice", test_dice_metric)
+        # avg_test_loss = torch.stack(self.test_step_outputs).mean()
+        # dice_metric = self.metric.aggregate().item()
+        # iou_metric = self.iou_metric.aggregate().item()
+        # self.log("avg_test_loss", avg_test_loss)
+        # self.log("test_dice", dice_metric)
+        # self.log("test_iou", iou_metric)
+        # self.dice_metric.reset()
+        # self.iou_metric.reset()
+        self._on_epoch_end("test", self.test_step_outputs)
         self.test_step_outputs.clear()
+
+    def _on_epoch_end(self, mode, step_outputs=None):
+        if step_outputs:
+            avg_loss = torch.stack(step_outputs).mean()
+            self.log(f"avg_{mode}_loss", avg_loss)
+            step_outputs.clear()
+
+        dice_metric = self.dice_metric.aggregate().item()
+        iou_metric = self.iou_metric.aggregate().item()
+        self.log(f"{mode}_dice", dice_metric)
+        self.log(f"{mode}_iou", iou_metric)
+        self.dice_metric.reset()
+        self.iou_metric.reset()
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
