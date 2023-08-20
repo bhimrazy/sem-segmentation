@@ -102,61 +102,41 @@ def main():
     model = torch.load(model_path)
 
     data_module.setup()
-    images, masks = next(iter(data_module.train_dataloader()))
 
-    # predict
+    # Training predictions
+    predict_and_log(model, data_module.train_dataloader(), "Train", wandb_logger, cfg)
+
+    # Validation predictions
+    predict_and_log(model, data_module.val_dataloader(), "Valid", wandb_logger, cfg)
+
+    # Test predictions
+    predict_and_log(model, data_module.test_dataloader(), "Test", wandb_logger, cfg)
+
+
+def predict_and_log(model, dataloader, title, logger, cfg):
+    images, masks = next(iter(dataloader))
+
+    # Predict
     with torch.no_grad():
         model.eval()
         pred = model(images)
 
-    # plot
+    # Plot
     fig = plot_predictions(
-        images, masks, pred, cfg["experiment"]["batch_size"], title="Train"
+        images, masks, pred, cfg["experiment"]["batch_size"], title=title
     )
 
     # Save the plot to a file
-    predictions = "artifacts/train-predictions.png"
+    predictions = f"artifacts/{title.lower()}-predictions.png"
     fig.savefig(predictions)
-    wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
+
+    # Log to WandB
+    logger.experiment.log({"predictions": wandb.Image(fig)})
+
+    # Log to MLflow
     mlflow.log_artifact(predictions)
-    fig.close()
 
-    images, masks = next(iter(data_module.val_dataloader()))
-
-    # predict
-    with torch.no_grad():
-        model.eval()
-        pred = model(images)
-
-    # plot
-    fig = plot_predictions(
-        images, masks, pred, cfg["experiment"]["batch_size"], title="Val"
-    )
-
-    # Save the plot to a file
-    predictions = "artifacts/valid-predictions.png"
-    fig.savefig(predictions)
-    wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
-    mlflow.log_artifact(predictions)
-    fig.close()
-
-    images, masks = next(iter(data_module.test_dataloader()))
-
-    # predict
-    with torch.no_grad():
-        model.eval()
-        pred = model(images)
-
-    # plot
-    fig = plot_predictions(
-        images, masks, pred, cfg["experiment"]["batch_size"], title="Test"
-    )
-
-    # Save the plot to a file
-    predictions = "artifacts/test-predictions.png"
-    fig.savefig(predictions)
-    wandb_logger.experiment.log({"predictions": wandb.Image(fig)})
-    mlflow.log_artifact(predictions)
+    # Close the figure
     fig.close()
 
 
