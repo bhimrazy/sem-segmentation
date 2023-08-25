@@ -1,0 +1,21 @@
+project: Rudrakhsa Segmentation Project
+data:
+  data_dir: data
+  dataset_folder: RudrakshaDataset
+
+
+model:
+  name: UNet
+  num_classes: 1
+
+experiment:
+  name: Rudraksha Segmentation
+  image_size: 256
+  batch_size: 8
+  split_ratio: 0.2
+  num_workers: 8
+  num_epochs: 2
+  lr: 0.001
+  accelerator: cuda # cpu, cuda or mps
+  devices: auto
+  random_seed: 42

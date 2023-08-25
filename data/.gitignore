@@ -1,0 +1,7 @@
+RudrakshaDataset
+*.csv
+*.txt
+*.zip
+
+__pycache__
+__MACOSX
