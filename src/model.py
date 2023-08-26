@@ -2,33 +2,31 @@ import torch
 from lightning import LightningModule
 from monai.losses import DiceLoss, DiceFocalLoss, GeneralizedDiceLoss
 from monai.metrics import DiceMetric, MeanIoU
-from monai.networks.nets import UNet
+from src.models.factory import get_model_factory
 
-import segmentation_models_pytorch as smp
+
+class LossFactory:
+    def create_loss(self, name):
+        if name == "DiceLoss":
+            return DiceLoss(sigmoid=True)
+        elif name == "DiceFocalLoss":
+            return DiceFocalLoss(sigmoid=True)
+        elif name == "GeneralizedDiceLoss":
+            return GeneralizedDiceLoss(sigmoid=True)
+        else:
+            raise NotImplementedError(f"{name} is not implemented")
 
 
 class RudrakshaSegModel(LightningModule):
-    def __init__(self, num_classes, lr=1e-4):
+    def __init__(self, model_name, num_classes, loss_fn, lr=1e-4):
         super().__init__()
         self.lr = lr
-        # self.model = UNet(
-        #     in_channels=3,
-        #     out_channels=num_classes,
-        #     spatial_dims=2,
-        #     channels=(16, 32, 64, 128, 256),
-        #     strides=(2, 2, 2, 2),
-        #     num_res_units=2,
-        # )
-        self.model = smp.DeepLabV3Plus(
-            encoder_name="resnet18",
-            encoder_weights="imagenet",
-            in_channels=3,
-            classes=num_classes,
-        )
-        self.loss_fn = GeneralizedDiceLoss(sigmoid=True)
+        self.model = get_model_factory(model_name, num_classes).create_model()
+        self.loss_fn = LossFactory().create_loss(loss_fn)
         self.dice_metric = DiceMetric(include_background=False, reduction="mean")
         self.iou_metric = MeanIoU(include_background=False, reduction="mean")
 
+        self.training_step_outputs = []
         self.validation_step_outputs = []
         self.test_step_outputs = []
 
@@ -37,10 +35,18 @@ class RudrakshaSegModel(LightningModule):
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        y_hat = self.forward(x)
-        loss = self.loss_fn(y_hat, y)
+        y_pred = self.forward(x)
+        loss = self.loss_fn(y_pred, y)
         self.log("train_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
+        self.training_step_outputs.append(loss)
+        y_pred = y_pred.sigmoid().round()
+        self.dice_metric(y_pred, y)
+        self.iou_metric(y_pred, y)
         return loss
+
+    def on_train_epoch_end(self):
+        self._on_epoch_end("train", self.training_step_outputs)
+        self.training_step_outputs.clear()
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -54,14 +60,6 @@ class RudrakshaSegModel(LightningModule):
         return loss
 
     def on_validation_epoch_end(self):
-        # avg_val_loss = torch.stack(self.validation_step_outputs).mean()
-        # dice_metric = self.dice_metric.aggregate().item()
-        # iou_metric = self.iou_metric.aggregate().item()
-        # self.log("avg_val_loss", avg_val_loss)
-        # self.log("val_dice", dice_metric)
-        # self.log("val_iou", iou_metric)
-        # self.dice_metric.reset()
-        # self.iou_metric.reset()
         self._on_epoch_end("val", self.validation_step_outputs)
         self.validation_step_outputs.clear()
 
@@ -77,14 +75,6 @@ class RudrakshaSegModel(LightningModule):
         return loss
 
     def on_test_epoch_end(self):
-        # avg_test_loss = torch.stack(self.test_step_outputs).mean()
-        # dice_metric = self.metric.aggregate().item()
-        # iou_metric = self.iou_metric.aggregate().item()
-        # self.log("avg_test_loss", avg_test_loss)
-        # self.log("test_dice", dice_metric)
-        # self.log("test_iou", iou_metric)
-        # self.dice_metric.reset()
-        # self.iou_metric.reset()
         self._on_epoch_end("test", self.test_step_outputs)
         self.test_step_outputs.clear()
 
