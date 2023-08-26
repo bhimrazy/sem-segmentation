@@ -1,7 +1,6 @@
 # Variables
 PYTHON = python
 MAIN_SCRIPT = main.py
-CONFIG_FILE = configs/config.yaml
 
 # Default target: Help Message
 help:
@@ -15,4 +14,4 @@ dataset:
 
 # Run the main script
 run:
-	$(PYTHON) $(MAIN_SCRIPT) -c $(CONFIG_FILE)
+	$(PYTHON) $(MAIN_SCRIPT)
