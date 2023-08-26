@@ -1,6 +1,7 @@
 import segmentation_models_pytorch as smp
 from monai.networks.nets import UNet
 from src.models.fcn import FCN8s
+from src.models.unet import UNet
 
 
 class BaseModelFactory:
@@ -14,6 +15,13 @@ class BaseModelFactory:
 class CustomFCN8sFactory(BaseModelFactory):
     def create_model(self):
         return FCN8s(num_classes=self.num_classes)
+
+
+class CustomUNetFactory(BaseModelFactory):
+    def create_model(self):
+        return UNet(
+            num_classes=self.num_classes,
+        )
 
 
 class UNetFactory(BaseModelFactory):
@@ -54,6 +62,7 @@ def get_model_factory(name, num_classes):
         "DeepLabV3": DeepLabV3Factory,
         "DeepLabV3Plus": DeepLabV3PlusFactory,
         "FCN8s": CustomFCN8sFactory,
+        "CustomUNet": CustomUNetFactory,
     }
     if name in factories:
         return factories[name](num_classes)
