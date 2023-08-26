@@ -1,33 +1,28 @@
-import argparse
 from os.path import join
 
+import hydra
 import mlflow
 import torch
 from lightning import seed_everything
 from lightning.pytorch import Trainer
+from lightning.pytorch.callbacks import (
+    LearningRateMonitor,
+    EarlyStopping,
+    ModelCheckpoint,
+)
 from lightning.pytorch.loggers import MLFlowLogger, WandbLogger
-from lightning.pytorch.callbacks import LearningRateMonitor
+from omegaconf import DictConfig
 
 import wandb
 from src.dataset import RudrakshaDataModule
-from src.io import load_config, load_data
+from src.io import load_data
 from src.model import RudrakshaSegModel
 from src.utils import split_data
 from src.viz import plot_predictions
 
-# argument parser
-parser = argparse.ArgumentParser(description="Main script pipeline")
-parser.add_argument(
-    "-c", "--config", type=str, required=True, help="path to config file"
-)
 
-
-def main():
-    # parse arguments
-    args = parser.parse_args()
-    # load config
-    cfg = load_config(args.config)
-
+@hydra.main(version_base=None, config_path="configs", config_name="config")
+def main(cfg: DictConfig) -> None:
     # seed
     seed_everything(cfg["experiment"]["random_seed"])
 
@@ -59,7 +54,10 @@ def main():
 
     # model
     model = RudrakshaSegModel(
-        num_classes=cfg["model"]["num_classes"], lr=cfg["experiment"]["lr"]
+        model_name=cfg["model"]["name"],
+        num_classes=cfg["model"]["num_classes"],
+        loss_fn=cfg["loss"]["name"],
+        lr=cfg["experiment"]["lr"],
     )
 
     # mlflow
@@ -76,6 +74,24 @@ def main():
     # learning rate monitor
     lr_monitor = LearningRateMonitor(logging_interval="step")
 
+    # early stopping
+    early_stopping = EarlyStopping(
+        monitor="val_loss",
+        patience=cfg["experiment"]["patience"],
+        verbose=True,
+        mode="min",
+    )
+
+    # model checkpoint
+    checkpoint_callback = ModelCheckpoint(
+        monitor="val_loss",
+        dirpath="checkpoints/",
+        filename="rudraksha-{epoch:02d}-{val_loss:.2f}",
+        save_top_k=3,
+        mode="min",
+        verbose=True,
+    )
+
     # trainer
     trainer = Trainer(
         max_epochs=cfg["experiment"]["num_epochs"],
@@ -84,7 +100,7 @@ def main():
         logger=[wandb_logger, mlflow_logger],
         log_every_n_steps=2,
         check_val_every_n_epoch=1,
-        callbacks=[lr_monitor],
+        callbacks=[lr_monitor, early_stopping, checkpoint_callback],
     )
 
     # train
