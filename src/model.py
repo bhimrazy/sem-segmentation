@@ -26,6 +26,7 @@ class RudrakshaSegModel(LightningModule):
         self.dice_metric = DiceMetric(include_background=False, reduction="mean")
         self.iou_metric = MeanIoU(include_background=False, reduction="mean")
 
+        self.training_step_outputs = []
         self.validation_step_outputs = []
         self.test_step_outputs = []
 
