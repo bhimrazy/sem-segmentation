@@ -67,7 +67,9 @@ def main(cfg: DictConfig) -> None:
 
     # Create WandB and MLflow loggers
     wandb_logger = WandbLogger(
-        project=cfg["experiment"]["name"], log_model=True, tags=[cfg["model"]["name"]]
+        project=cfg["experiment"]["name"],
+        log_model=True,
+        tags=[cfg["model"]["name"], cfg["loss"]["name"]],
     )
     mlflow_logger = MLFlowLogger(experiment_name=cfg["experiment"]["name"])
 
