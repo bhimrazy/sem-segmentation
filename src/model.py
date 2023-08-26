@@ -45,6 +45,11 @@ class RudrakshaSegModel(LightningModule):
         self.log("train_iou", iou)
         return loss
 
+    def on_train_epoch_end(self):
+        avg_loss = torch.stack(self.training_step_outputs).mean()
+        self.log("avg_train_loss", avg_loss)
+        self.training_step_outputs.clear()
+
     def validation_step(self, batch, batch_idx):
         x, y = batch
         y_pred = self(x)
