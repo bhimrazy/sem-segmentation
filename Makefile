@@ -6,7 +6,7 @@ MAIN_SCRIPT = main.py
 help:
 	@echo "Usage: make <target>"
 	@echo "Targets:"
-	@echo "  dataset    : Download data"
+	@echo "dataset    : Download data"
 
 # Download data
 dataset:
