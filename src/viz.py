@@ -1,5 +1,5 @@
-import torch
 import matplotlib.pyplot as plt
+import torch
 
 
 def plot_predictions(images, masks, pred, BATCH, title="Test", figsize=(20, 10)):
