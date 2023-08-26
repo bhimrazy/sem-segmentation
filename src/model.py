@@ -29,6 +29,9 @@ class RudrakshaSegModel(LightningModule):
         self.validation_step_outputs = []
         self.test_step_outputs = []
 
+        self.dice_metric.reset()
+        self.iou_metric.reset()
+
     def forward(self, x):
         return self.model(x)
 
