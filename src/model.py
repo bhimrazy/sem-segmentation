@@ -1,7 +1,8 @@
 import torch
 from lightning import LightningModule
-from monai.losses import DiceLoss, DiceFocalLoss, GeneralizedDiceLoss
+from monai.losses import DiceFocalLoss, DiceLoss, GeneralizedDiceLoss
 from monai.metrics import DiceMetric, MeanIoU, compute_dice, compute_iou
+
 from src.models.factory import get_model_factory
 
 
