@@ -52,9 +52,19 @@ Run the training script using one of the following methods:
 ```bash
 python main.py
 
+# switch model
+python main.py model.name="MODEL_KEY_NAME"
+
 # or
 make run
 ```
+
+Available models with their keys in the factroy are:
+
+- `UNet`: MONAI U-Net model
+- `DeepLabV3`: smp DeepLabV3 model
+- `DeepLabV3Plus`: smp DeepLabV3Plus model
+- `FCN8s`: Custom FCN8s model
 
 ### Project Structure
 
