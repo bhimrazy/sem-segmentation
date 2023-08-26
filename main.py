@@ -57,7 +57,7 @@ def main(cfg: DictConfig) -> None:
         model_name=cfg["model"]["name"],
         num_classes=cfg["model"]["num_classes"],
         loss_fn=cfg["loss"]["name"],
-        lr=cfg["experiment"]["lr"],
+        lr=cfg["experiment"]["learning_rate"],
     )
 
     # mlflow
