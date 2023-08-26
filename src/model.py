@@ -42,8 +42,8 @@ class RudrakshaSegModel(LightningModule):
         y_pred = y_pred.sigmoid().round()
         dice = compute_dice(y_pred, y, include_background=False)
         iou = compute_iou(y_pred, y, include_background=False)
-        self.log("train_dice", dice)
-        self.log("train_iou", iou)
+        self.log("train_dice", dice.mean())
+        self.log("train_iou", iou.mean())
         return loss
 
     def on_train_epoch_end(self):
