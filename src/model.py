@@ -29,9 +29,6 @@ class RudrakshaSegModel(LightningModule):
         self.validation_step_outputs = []
         self.test_step_outputs = []
 
-        self.dice_metric.reset()
-        self.iou_metric.reset()
-
     def forward(self, x):
         return self.model(x)
 
@@ -57,11 +54,9 @@ class RudrakshaSegModel(LightningModule):
         y_pred = y_pred.sigmoid().round()
         self.dice_metric(y_pred, y)
         self.iou_metric(y_pred, y)
-        print("val step", batch_idx)
         return loss
 
     def on_validation_epoch_end(self):
-        print("Validation Epoch end")
         self._on_epoch_end("val", self.validation_step_outputs)
         self.validation_step_outputs.clear()
 
@@ -86,13 +81,12 @@ class RudrakshaSegModel(LightningModule):
             self.log(f"avg_{mode}_loss", avg_loss)
             step_outputs.clear()
 
-        self.dice_metric.reset()
-        self.iou_metric.reset()
-
         dice_metric = self.dice_metric.aggregate().item()
         iou_metric = self.iou_metric.aggregate().item()
         self.log(f"{mode}_dice", dice_metric)
         self.log(f"{mode}_iou", iou_metric)
+        self.dice_metric.reset()
+        self.iou_metric.reset()
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
