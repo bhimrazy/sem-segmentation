@@ -54,9 +54,6 @@ python main.py
 
 # switch model
 python main.py model.name="MODEL_KEY_NAME"
-
-# or
-make run
 ```
 
 Available models with their keys in the factroy are:
@@ -65,6 +62,15 @@ Available models with their keys in the factroy are:
 - `DeepLabV3`: smp DeepLabV3 model
 - `DeepLabV3Plus`: smp DeepLabV3Plus model
 - `FCN8s`: Custom FCN8s model
+- `CustomUNet`: Custom UNet model
+- `CustomResUNet`: Custom ResUNet model
+- `AttResUNet`: Custom Attention ResUNet model
+- `AttentionUNet`: Custom Attention UNet model
+- `FPN`: Smp FPN model
+- `UNETR`: MONAI UNETR model
+- `SwinUNETR`: MONAI SwinUNETR model
+- `SmpResUNet`: Smp ResUNet model
+- `SmpResUNetPlusPlus`: Smp ResUNetPlusPlus model
 
 ### Project Structure
 
