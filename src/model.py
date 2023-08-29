@@ -1,6 +1,13 @@
 import torch
+from torch.nn import CrossEntropyLoss
 from lightning import LightningModule
-from monai.losses import DiceFocalLoss, DiceLoss, GeneralizedDiceLoss
+from monai.losses import (
+    DiceFocalLoss,
+    DiceLoss,
+    GeneralizedDiceLoss,
+    FocalLoss,
+    DiceCELoss,
+)
 from monai.metrics import DiceMetric, MeanIoU, compute_dice, compute_iou
 
 from src.models.factory import get_model_factory
@@ -14,6 +21,12 @@ class LossFactory:
             return DiceFocalLoss(sigmoid=True)
         elif name == "GeneralizedDiceLoss":
             return GeneralizedDiceLoss(sigmoid=True)
+        elif name == "FocalLoss":
+            return FocalLoss(sigmoid=True)
+        elif name == "DiceCELoss":
+            return DiceCELoss(sigmoid=True)
+        elif name == "CrossEntropyLoss":
+            return CrossEntropyLoss()
         else:
             raise NotImplementedError(f"{name} is not implemented")
 
