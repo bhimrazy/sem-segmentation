@@ -1,4 +1,4 @@
-project: 
+project:
   name: Rudrakhsa Segmentation Project
 data:
   data_dir: data
@@ -7,6 +7,7 @@ data:
 model:
   name: UNet
   num_classes: 1
+  smp_encoder: resnet18
 
 loss:
   name: GeneralizedDiceLoss
@@ -20,6 +21,6 @@ experiment:
   learning_rate: 0.001
   split_ratio: 0.2
   num_workers: 8
-  accelerator: cuda  # cpu, cuda, or mps
+  accelerator: cuda # cpu, cuda, or mps
   devices: auto
   random_seed: 42
