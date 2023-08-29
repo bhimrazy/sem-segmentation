@@ -55,6 +55,7 @@ def main(cfg: DictConfig) -> None:
     # model
     model = RudrakshaSegModel(
         model_name=cfg["model"]["name"],
+        smp_encoder=cfg["model"]["smp_encoder"],
         num_classes=cfg["model"]["num_classes"],
         loss_fn=cfg["loss"]["name"],
         lr=cfg["experiment"]["learning_rate"],
