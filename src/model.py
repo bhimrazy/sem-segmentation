@@ -19,10 +19,12 @@ class LossFactory:
 
 
 class RudrakshaSegModel(LightningModule):
-    def __init__(self, model_name, num_classes, loss_fn, lr=1e-4):
+    def __init__(self, model_name, smp_encoder, num_classes, loss_fn, lr=1e-4):
         super().__init__()
         self.lr = lr
-        self.model = get_model_factory(model_name, num_classes).create_model()
+        self.model = get_model_factory(
+            model_name, num_classes, smp_encoder
+        ).create_model()
         self.loss_fn = LossFactory().create_loss(loss_fn)
         self.dice_metric = DiceMetric(include_background=False, reduction="mean")
         self.iou_metric = MeanIoU(include_background=False, reduction="mean")
