@@ -1,12 +1,11 @@
 import segmentation_models_pytorch as smp
-from monai.networks.nets import UNet
+from monai.networks.nets import UNETR, SwinUNETR, UNet
 
+from src.models.attention_res_unet import AttResUNet
+from src.models.attention_unet import AttentionUNet
 from src.models.fcn import FCN8s
 from src.models.res_unet import ResUNet
 from src.models.unet import UNet as CustomUNet
-from src.models.attention_res_unet import AttResUNet
-from src.models.attention_unet import AttentionUNet
-from monai.networks.nets import UNETR, SwinUNETR
 
 
 class BaseModelFactory:

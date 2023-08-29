@@ -1,14 +1,9 @@
 import torch
-from torch.nn import CrossEntropyLoss
 from lightning import LightningModule
-from monai.losses import (
-    DiceFocalLoss,
-    DiceLoss,
-    GeneralizedDiceLoss,
-    FocalLoss,
-    DiceCELoss,
-)
+from monai.losses import (DiceCELoss, DiceFocalLoss, DiceLoss, FocalLoss,
+                          GeneralizedDiceLoss)
 from monai.metrics import DiceMetric, MeanIoU, compute_dice, compute_iou
+from torch.nn import CrossEntropyLoss
 
 from src.models.factory import get_model_factory
 
