@@ -8,3 +8,4 @@ wandb
 python-decouple
 segmentation-models-pytorch
 hydra-core
+einops
