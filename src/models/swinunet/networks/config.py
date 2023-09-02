@@ -19,13 +19,13 @@ _C.BASE = [""]
 # -----------------------------------------------------------------------------
 _C.DATA = CN()
 # Batch size for a single GPU, could be overwritten by command line argument
-_C.DATA.BATCH_SIZE = 128
+_C.DATA.BATCH_SIZE = 8
 # Path to dataset, could be overwritten by command line argument
 _C.DATA.DATA_PATH = ""
 # Dataset name
 _C.DATA.DATASET = "imagenet"
 # Input image size
-_C.DATA.IMG_SIZE = 224
+_C.DATA.IMG_SIZE = 256
 # Interpolation to resize image (random, bilinear, bicubic)
 _C.DATA.INTERPOLATION = "bicubic"
 # Use zipped dataset instead of folder dataset
