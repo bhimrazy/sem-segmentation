@@ -71,6 +71,8 @@ Available models with their keys in the factroy are:
 - `SwinUNETR`: MONAI SwinUNETR model
 - `SmpResUNet`: Smp ResUNet model
 - `SmpResUNetPlusPlus`: Smp ResUNetPlusPlus model
+- `TransUNet`: TransUnet from `mkaa44`: default image size to 256
+- `SwinUnet`: SwinUnet from `HuCaoFighting`: default image size to 224
 
 ### Project Structure
 
