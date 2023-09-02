@@ -8,6 +8,8 @@ from src.models.res_unet import ResUNet
 from src.models.unet import UNet as CustomUNet
 
 from src.models.transunet.transunet import TransUNet
+from src.models.swinunet.networks.vision_transformer import SwinUnet
+from src.models.swinunet.networks.config import get_config
 
 
 class BaseModelFactory:
@@ -148,6 +150,12 @@ class TransUNetFactory(BaseModelFactory):
         )
 
 
+class SwinUnetFactory(BaseModelFactory):
+    def create_model(self):
+        config = get_config()
+        return SwinUnet(config, img_size=256, num_classes=self.num_classes)
+
+
 def get_model_factory(name, num_classes, smp_encoder):
     factories = {
         "UNet": UNetFactory,
@@ -164,6 +172,7 @@ def get_model_factory(name, num_classes, smp_encoder):
         "SmpResUNet": SmpResUNetFactory,
         "SmpResUNetPlusPlus": SmpResUNetPlusPlusFactory,
         "TransUNet": TransUNetFactory,
+        "SwinUnet": SwinUnetFactory,
     }
     if name in factories:
         return factories[name](num_classes, smp_encoder)
