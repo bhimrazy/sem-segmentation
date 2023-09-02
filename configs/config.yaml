@@ -14,7 +14,7 @@ loss:
 
 experiment:
   name: Rudraksha Segmentation
-  num_epochs: 100
+  num_epochs: 10
   patience: 20
   image_size: 256
   batch_size: 8
