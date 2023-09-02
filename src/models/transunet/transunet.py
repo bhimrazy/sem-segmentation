@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 from einops import rearrange
 
-from utils.vit import ViT
+from src.models.transunet.vit import ViT
 
 
 class EncoderBottleneck(nn.Module):
