@@ -7,6 +7,8 @@ from src.models.fcn import FCN8s
 from src.models.res_unet import ResUNet
 from src.models.unet import UNet as CustomUNet
 
+from src.models.transunet.transunet import TransUNet
+
 
 class BaseModelFactory:
     def __init__(self, num_classes, smp_encoder="resnet18"):
@@ -132,6 +134,20 @@ class SwinUNETRFactory(BaseModelFactory):
         )
 
 
+class TransUNetFactory(BaseModelFactory):
+    def create_model(self):
+        return TransUNet(
+            img_dim=256,
+            in_channels=3,
+            out_channels=128,
+            head_num=4,
+            mlp_dim=512,
+            block_num=8,
+            patch_dim=16,
+            class_num=self.num_classes,
+        )
+
+
 def get_model_factory(name, num_classes, smp_encoder):
     factories = {
         "UNet": UNetFactory,
@@ -147,6 +163,7 @@ def get_model_factory(name, num_classes, smp_encoder):
         "SwinUNETR": SwinUNETRFactory,
         "SmpResUNet": SmpResUNetFactory,
         "SmpResUNetPlusPlus": SmpResUNetPlusPlusFactory,
+        "TransUNet": TransUNetFactory,
     }
     if name in factories:
         return factories[name](num_classes, smp_encoder)
