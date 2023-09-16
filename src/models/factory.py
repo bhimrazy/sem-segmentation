@@ -162,7 +162,7 @@ class TransUNetFactory(BaseModelFactory):
 class SwinUnetFactory(BaseModelFactory):
     def create_model(self):
         config = get_config()
-        return SwinUnet(config, img_size=256, num_classes=self.num_classes)
+        return SwinUnet(config, img_size=224, num_classes=self.num_classes)
 
 
 def get_model_factory(name, num_classes, smp_encoder):
