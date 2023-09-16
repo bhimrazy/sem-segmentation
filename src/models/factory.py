@@ -113,6 +113,15 @@ class SmpResUNetPlusPlusFactory(BaseModelFactory):
         )
 
 
+class SmpPSPNetFactory(BaseModelFactory):
+    def create_model(self):
+        return smp.PSPNet(
+            encoder_name=self.smp_encoder,
+            encoder_weights="imagenet",
+            classes=self.num_classes,
+        )
+
+
 class UNETRFactory(BaseModelFactory):
     def create_model(self):
         return UNETR(
@@ -171,6 +180,7 @@ def get_model_factory(name, num_classes, smp_encoder):
         "SwinUNETR": SwinUNETRFactory,
         "SmpResUNet": SmpResUNetFactory,
         "SmpResUNetPlusPlus": SmpResUNetPlusPlusFactory,
+        "SmpPSPNet": SmpPSPNetFactory,
         "TransUNet": TransUNetFactory,
         "SwinUnet": SwinUnetFactory,
     }
