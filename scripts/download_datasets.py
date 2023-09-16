@@ -49,7 +49,8 @@ def download_dataset(file_id, destination_folder):
     os.remove(f"{destination_folder}/dataset.zip")
 
     # Remove the __MACOSX folder
-    shutil.rmtree(f"{destination_folder}/__MACOSX")
+    if os.path.exists(f"{destination_folder}/__MACOSX"):
+        shutil.rmtree(f"{destination_folder}/__MACOSX")
     print("Dataset downloaded, unzipped, and zip file removed successfully.")
 
 
