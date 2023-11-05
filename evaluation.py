@@ -169,7 +169,7 @@ for i, (mask, pred_mask) in enumerate(zip(y_true[:8], y_pred[:8])):
 # Create the line plot
 plt.figure(figsize=(10, 6))  # Adjust the figure size as needed
 
-plt.plot(images, mask_white_counts, marker="o", label="Truth")
+plt.plot(images, mask_white_counts, marker="o", label="Actual")
 plt.plot(
     images,
     pred_mask_white_counts,
