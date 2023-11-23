@@ -73,6 +73,9 @@ def main(cfg: DictConfig) -> None:
         tags=[cfg["model"]["name"], cfg["loss"]["name"]],
     )
     mlflow_logger = MLFlowLogger(experiment_name=cfg["experiment"]["name"])
+    
+    # log yaml configs
+    wandb_logger.experiment.config["config"] = cfg
 
     # learning rate monitor
     lr_monitor = LearningRateMonitor(logging_interval="step")
