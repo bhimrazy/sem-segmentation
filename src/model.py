@@ -29,6 +29,7 @@ class LossFactory:
 class RudrakshaSegModel(LightningModule):
     def __init__(self, model_name, smp_encoder, num_classes, loss_fn, lr=1e-4):
         super().__init__()
+        self.save_hyperparameters()
         self.lr = lr
         self.model = get_model_factory(
             model_name, num_classes, smp_encoder
