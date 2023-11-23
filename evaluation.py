@@ -11,28 +11,28 @@ from os.path import join
 import matplotlib.pyplot as plt
 
 
-parser = argparse.ArgumentParser(description='Rudraksha Segmentation Evaluation')
-parser.add_argument('-m','--model', default='UNet', type=str, help='model name')
-parser.add_argument('-r','--modelreg', default='rudraksha-segmentation/Semantic Segmentation UNet lr_fixed/model-4jgahlq4:v0', type=str, help='WandB model registry')
+parser = argparse.ArgumentParser(description="Rudraksha Segmentation Evaluation")
+parser.add_argument("-m", "--model", default="UNet", type=str, help="model name")
+parser.add_argument(
+    "-r",
+    "--modelreg",
+    default="rudraksha-segmentation/Semantic Segmentation UNet lr_fixed/model-4jgahlq4:v0",
+    type=str,
+    help="WandB model registry",
+)
+parser.add_argument(
+    "-e", "--encoder", default="resnet50", type=str, help="Encoder name"
+)
 
 args = parser.parse_args()
 run = wandb.init(project="evaluation")
 
 
 cfg = {
-    "data":{
-        "data_dir": "data",
-        "dataset_folder": "RudrakshaDataset"
-    },
-    "model":{
-        "name": args.model,
-        "num_classes": 1,
-        "smp_encoder": "resnet18"
-    },
-    "loss":{
-        "name": "GeneralizedDiceLoss"
-    },
-    "experiment":{
+    "data": {"data_dir": "data", "dataset_folder": "RudrakshaDataset"},
+    "model": {"name": args.model, "num_classes": 1, "smp_encoder": args.encoder},
+    "loss": {"name": "GeneralizedDiceLoss"},
+    "experiment": {
         "name": "Rudraksha Segmentation",
         "num_epochs": 100,
         "patience": 20,
@@ -41,30 +41,33 @@ cfg = {
         "learning_rate": 0.001,
         "split_ratio": 0.2,
         "num_workers": 1,
-        "accelerator": "cpu", # cpu, cuda, or mps
+        "accelerator": "cpu",  # cpu, cuda, or mps
         "devices": "auto",
-        "random_seed": 42
-    }
+        "random_seed": 42,
+    },
 }
 
 seed_everything(cfg["experiment"]["random_seed"])
 
 # Load model from WandB
 model_registry = args.modelreg
-artifact = run.use_artifact(model_registry, type='model')
+artifact = run.use_artifact(model_registry, type="model")
 artifact_dir = artifact.download()
 
-checkpoint_path = os.path.join(artifact_dir, 'model.ckpt')
+checkpoint_path = os.path.join(artifact_dir, "model.ckpt")
 
 # Load the model
-checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
+checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
 
-model = RudrakshaSegModel(model_name=cfg["model"]["name"], num_classes=1, smp_encoder="resnet18", loss_fn="GeneralizedDiceLoss")
+model = RudrakshaSegModel(
+    model_name=cfg["model"]["name"],
+    num_classes=1,
+    smp_encoder=cfg["model"]["smp_encoder"],
+    loss_fn="GeneralizedDiceLoss",
+)
 model.load_state_dict(checkpoint["state_dict"])
 
 # Evaluate the model
-
-
 
 
 dataset_path = join(cfg["data"]["data_dir"], cfg["data"]["dataset_folder"])
@@ -103,10 +106,9 @@ with torch.no_grad():
     for batch in data_module.test_dataloader():
         x, y = batch
         y_hat = model(x)
-        
+
         y_true.extend(y)
         y_pred.extend(y_hat)
-
 
 
 def plot_masks_and_histograms(y_true, y_pred):
@@ -122,34 +124,34 @@ def plot_masks_and_histograms(y_true, y_pred):
             if idx >= len(y_true):
                 break  # Break if we have displayed all images
             # Plot the first row of the true mask
-            axs[0, j].imshow(y_true[idx].permute(1,2,0), cmap='gray')
-            axs[0, j].set_title('True Mask')
+            axs[0, j].imshow(y_true[idx].permute(1, 2, 0), cmap="gray")
+            axs[0, j].set_title("True Mask")
 
             # Plot the histogram of the true mask
-            axs[1, j].hist(y_true[idx].flatten(), bins=256, color='blue')
-            axs[1, j].set_title('Histogram (True)')
+            axs[1, j].hist(y_true[idx].flatten(), bins=256, color="blue")
+            axs[1, j].set_title("Histogram (True)")
 
             # Plot the predicted mask
-            axs[2, j].imshow(y_pred[idx].sigmoid().permute(1,2,0), cmap='gray')
-            axs[2, j].set_title('Predicted Mask')
+            axs[2, j].imshow(y_pred[idx].sigmoid().permute(1, 2, 0), cmap="gray")
+            axs[2, j].set_title("Predicted Mask")
 
             # Plot the histogram of the predicted mask
-            axs[3, j].hist(y_pred[idx].sigmoid().flatten(), bins=256, color='red')
-            axs[3, j].set_title('Histogram (Predicted)')
+            axs[3, j].hist(y_pred[idx].sigmoid().flatten(), bins=256, color="red")
+            axs[3, j].set_title("Histogram (Predicted)")
 
     # Set common y-axis labels
     for j in range(5):
-        axs[0, j].set_ylabel('True Mask')
-        axs[1, j].set_ylabel('Histogram (True)')
-        axs[2, j].set_ylabel('Predicted Mask')
-        axs[3, j].set_ylabel('Histogram (Predicted)')
+        axs[0, j].set_ylabel("True Mask")
+        axs[1, j].set_ylabel("Histogram (True)")
+        axs[2, j].set_ylabel("Predicted Mask")
+        axs[3, j].set_ylabel("Histogram (Predicted)")
 
     plt.tight_layout()
-    plt.savefig('evaluation.png')
+    plt.savefig("evaluation.png")
     plt.close()
 
-plot_masks_and_histograms(y_true, y_pred)
 
+plot_masks_and_histograms(y_true, y_pred)
 
 
 # white pixels ratio
@@ -157,8 +159,7 @@ mask_white_counts = []
 pred_mask_white_counts = []
 images = []
 
-for i, (mask, pred_mask) in enumerate(zip(y_true[:8], y_pred[:8])):  
-
+for i, (mask, pred_mask) in enumerate(zip(y_true[:8], y_pred[:8])):
     no_of_white_pixel_in_mask = torch.sum(mask.flatten())
     no_of_white_pixel_in_pred_mask = torch.sum(pred_mask.sigmoid().flatten())
     mask_white_counts.append(no_of_white_pixel_in_mask)
@@ -194,5 +195,5 @@ for i, (x, y1, y2) in enumerate(zip(images, mask_white_counts, pred_mask_white_c
 plt.legend(loc="best")
 
 # Show the plot
-plt.savefig('white_count.png')
+plt.savefig("white_count.png")
 plt.close()
