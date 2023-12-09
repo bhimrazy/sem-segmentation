@@ -3,34 +3,33 @@
 ## Tools and Technologies Utilized
 
 1. [PyTorch](https://pytorch.org/)
-   This Project is based on PyTorch. Pytorch is really flexible to implement any kind of neural network. It is also very fast and easy to use. It is also very popular among the research community.
+   PyTorch is the foundation of this project, offering flexibility in implementing various neural networks. Known for its speed, ease of use, and popularity among the research community.
 2. [PyTorch Lightning](https://lightning.ai)
-   PyTorch Lightning is a wrapper around PyTorch that handles a lot of the boilerplate code and makes it easier to train models. It also makes it easier to train models on multiple GPUs and TPUs. It also has a lot of other features like logging, checkpointing, etc. which has been used in this project.
+   A PyTorch wrapper simplifying model training, handling boilerplate code, multi-GPU/TPU utilization, and providing logging and checkpointing features.
 3. [Segmentation Models Pytorch](https://smp.readthedocs.io)
-   Segmentation Models Pytorch is a library that provides a lot of pre-trained models for segmentation. It also provides a lot of loss functions for segmentation.
+   Library offering pre-trained segmentation models, encoders, metrices and diverse loss functions specifically for segmentation tasks.
 4. [MONAI](https://monai.io/)
-   MONAI is a PyTorch-based, open-source framework for deep learning It provides a lot of tools for medical imaging. It also provides a lot of pre-trained models for medical imaging.
+   PyTorch-based framework focusing on deep learning tools tailored for medical imaging, including various pre-trained models.
 5. [Hydra](https://hydra.cc/)
-   Hydra is a framework for elegantly configuring complex applications. It is used to configure the hyperparameters of the model. It also makes it easier to run the same model with different hyperparameters. In this project it has been used to control several parameters like dataset, model , optimizer, loss, etc. based on the configuration file.
+   Configuration framework aiding in managing diverse parameters such as dataset configurations, models, optimizers, etc., through configuration files.
 6. [Matplotlib](https://matplotlib.org/)
-   Matplotlib is a plotting library for Python. It is used to plot the images and masks. It is also used to plot the loss and accuracy curves.
+   Python's plotting library used for visualizing images, masks, as well as plotting loss and accuracy curves.
 7. [Wandb](https://wandb.ai/)
-   Wandb is a tool for visualizing and logging the training process. In this project it has been used to log the training process and visualize the results, like the loss, accuracy, etc. ALong with that it also logs the hyperparameters and the model architecture, with several checkpoints. It also provides a beautiful dashboard to visualize the results and also compare the results of different experiments.
+   Tool for visualizing and logging the training process, including metrics, hyperparameters, model architecture, checkpoints, and facilitating comparison of experiments through a user-friendly dashboard.
 8. [MLFlow](https://mlflow.org/)
-   MLFlow is a tool for tracking the experiments. It is used to track the experiments and compare the results of different experiments. In this project it has been used to track the experiments and compare the results of different experiments.
+   Experiment tracking tool used for managing and comparing experiment results.
 
 ## Project Configuration
 
 ### Seed Everything
 
-    In this project, a seed 42 has been used. This is to ensure that the results are reproducible. We can also use different seeds for different experiments to see how the results vary with different seeds.
+In this project, a seed value of 42 is utilized to ensure result reproducibility. Different seeds can also be employed to observe variations across experiments.
 
 ### Configuring the Dataset
 
 #### Data Distribution
 
-    dataset_path = data/RudrakshaDataset
-    Dataset Info:
+    The dataset resides at data/RudrakshaDataset, containing:
     Number of images: 128
     Number of masks: 128
 
@@ -81,9 +80,10 @@
 
     Loss function: Even incase of loss function we have a factory setup to use loss functions based on the configuration. But Mainly we have used `GeneralizedDiceLoss` as our loss function.We mainly used this loass function as it is very good in terms of handling class imbalance.
 
-    Optimizer: We have used `Adam` optimizer. It is a very popular optimizer and it is very good for training deep neural networks. It is also very fast and easy to use. It is also very popular among the research community.
+    Optimizer: We have used `Adam` optimizer. Adam optimizer is employed for its efficiency in training deep neural networks.
 
-    Learning Rate Scheduler: We have used `ReduceLROnPlateau` learning rate scheduler. It is a very popular learning rate scheduler. It reduces the learning rate when the validation loss stops improving. It helps in improving the performance of the model.
+    Learning Rate Scheduler: We have used `ReduceLROnPlateau` learning rate scheduler. The ReduceLROnPlateau learning rate scheduler is utilized, dynamically reducing the learning rate based on validation loss improvements.
+
     We have following parameters choosen for the learning rate scheduler:
     1. mode: min. It means that the learning rate will be reduced when the validation loss stops improving.
     2. factor: 0.5. It means that the learning rate will be reduced by a factor of 0.5.
@@ -93,19 +93,22 @@
 
 ### Configuring the Training Process
 
-    We have also used `EarlyStopping` callback. It is used to stop the training process when the validation loss stops improving. It helps in preventing overfitting.
+    Various callbacks are used in this project:
 
-    We have also used `ModelCheckpoint` callback. It is used to save the best model during the training process. It helps in preventing overfitting. In our case it saves top 3 models based on the validation loss.
+    1. EarlyStopping: Halts training when validation loss plateaus, preventing overfitting.
+    2. ModelCheckpoint: Saves the top 3 models based on validation loss.
+    3. LearningRateMonitor: Logs the learning rate throughout training.
 
-    We have also used `LearningRateMonitor` callback. It is used to log the learning rate during the training process. It helps in visualizing the learning rate during the training process.
+    Multiple loggers are used:
 
-    We have also used `WandbLogger` callback. It is used to log the training process. It helps in visualizing the training process.
-    We hae also used `MLFlowLogger` callback. It is used to log the training process. It helps in visualizing the training process.
+    WandbLogger: Visualizes and logs training progress, hyperparameters, artifacts, facilitating comparisons and sharing results.
+    MLFlowLogger: Assists in local experiment visualization and logging.
 
     We could have just use any one of the logging tool but we have used both of them to show how we can use multiple logging tools at the same time. We can also use other logging tools like Tensorboard, Neptune, etc.
     We mainly used MLFlow to visualize experiments locally and then also used wandb at the same time to share the results with the team and also to log artifacts like images, checkpoints of model. We can also use MLFlow to log artifacts but we have used wandb for that.
 
-    In this project,We have used `Trainer` class from PyTorch Lightning. It is used to train the model. It uses the following parameters:
+
+    In this project,The Trainer class from PyTorch Lightning is utilized, incorporating parameters such as:
 
     1. max_epochs: 100. The maximum number of epochs to train the model. It is set to 100. But the training process will stop if the validation loss stops improving. It is updated based on the experimentation needs.
     2. accelerator: cuda. It means that the model will be trained on GPU. If we want to train the model on CPU, we can change it to cpu.
