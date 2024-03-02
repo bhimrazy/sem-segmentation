@@ -26,4 +26,5 @@ experiment:
   random_seed: 42
 
   use_scheduler: True
+  use_checkpointing: True
   log_artifacts: True

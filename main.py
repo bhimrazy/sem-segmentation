@@ -99,6 +99,10 @@ def main(cfg: DictConfig) -> None:
         verbose=True,
     )
 
+    trainer_callbacks = [lr_monitor, early_stopping]
+    if cfg["experiment"]["use_checkpointing"]:
+        trainer_callbacks.append(checkpoint_callback)
+
     # trainer
     trainer = Trainer(
         max_epochs=cfg["experiment"]["num_epochs"],
@@ -107,7 +111,7 @@ def main(cfg: DictConfig) -> None:
         logger=[wandb_logger, mlflow_logger],
         log_every_n_steps=2,
         check_val_every_n_epoch=1,
-        callbacks=[lr_monitor, early_stopping, checkpoint_callback],
+        callbacks=trainer_callbacks,
     )
 
     # train
