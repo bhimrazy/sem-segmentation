@@ -7,7 +7,7 @@ data:
 model:
   name: UNet
   num_classes: 1
-  smp_encoder: resnet18
+  smp_encoder: resnet50
 
 loss:
   name: GeneralizedDiceLoss
