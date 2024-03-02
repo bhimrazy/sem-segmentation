@@ -1,5 +1,6 @@
 import random
 from typing import List, Tuple
+from src.io import load_data
 
 
 def split_data(
@@ -53,3 +54,28 @@ def split_data(
 
     return X_train, X_valid, X_test, y_train, y_valid, y_test
 
+
+if __name__ == "__main__":
+    # load data
+    dataset_path = "data/RudrakshaDataset"
+    images, masks = load_data(dataset_path)
+
+    print("Number of images:", len(images))
+    print("Number of masks:", len(masks))
+
+    X_train, X_valid, X_test, y_train, y_valid, y_test = split_data(
+        images,
+        masks,
+        test_size=0.2,
+        valid_size=0.2,
+        random_state=42,
+    )
+
+    print("Number of training images:", len(X_train))
+    print("Number of validation images:", len(X_valid))
+    print("Number of test images:", len(X_test))
+
+    # Ratio:
+    print("Ratio of training images:", len(X_train) / len(images))
+    print("Ratio of validation images:", len(X_valid) / len(images))
+    print("Ratio of test images:", len(X_test) / len(images))
