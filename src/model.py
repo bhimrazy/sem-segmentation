@@ -1,7 +1,12 @@
 import torch
 from lightning import LightningModule
-from monai.losses import (DiceCELoss, DiceFocalLoss, DiceLoss, FocalLoss,
-                          GeneralizedDiceLoss)
+from monai.losses import (
+    DiceCELoss,
+    DiceFocalLoss,
+    DiceLoss,
+    FocalLoss,
+    GeneralizedDiceLoss,
+)
 from monai.metrics import DiceMetric, MeanIoU, compute_dice, compute_iou
 from torch.nn import CrossEntropyLoss
 
@@ -27,10 +32,13 @@ class LossFactory:
 
 
 class RudrakshaSegModel(LightningModule):
-    def __init__(self, model_name, smp_encoder, num_classes, loss_fn, lr=1e-4):
+    def __init__(
+        self, model_name, smp_encoder, num_classes, loss_fn, lr=1e-4, use_scheduler=True
+    ):
         super().__init__()
         self.save_hyperparameters()
         self.lr = lr
+        self.use_scheduler = use_scheduler
         self.model = get_model_factory(
             model_name, num_classes, smp_encoder
         ).create_model()
@@ -109,18 +117,22 @@ class RudrakshaSegModel(LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
 
-        # Add lr scheduler
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer,
-            mode="min",  # or "max" if you're maximizing a metric
-            factor=0.5,  # factor by which the learning rate will be reduced
-            patience=5,  # number of epochs with no improvement after which learning rate will be reduced
-            verbose=True,  # print a message when learning rate is reduced
-            threshold=0.001,  # threshold for measuring the new optimum, to only focus on significant changes
-        )
-
-        return {
+        configuration = {
             "optimizer": optimizer,
-            "lr_scheduler": scheduler,
             "monitor": "val_loss",  # monitor validation loss
         }
+
+        if self.use_scheduler:
+            # Add lr scheduler
+            scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+                optimizer,
+                mode="min",  # or "max" if you're maximizing a metric
+                factor=0.5,  # factor by which the learning rate will be reduced
+                patience=5,  # number of epochs with no improvement after which learning rate will be reduced
+                verbose=True,  # print a message when learning rate is reduced
+                threshold=0.001,  # threshold for measuring the new optimum, to only focus on significant changes
+            )
+
+            configuration["lr_scheduler"] = scheduler
+
+        return configuration

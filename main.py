@@ -59,6 +59,7 @@ def main(cfg: DictConfig) -> None:
         num_classes=cfg["model"]["num_classes"],
         loss_fn=cfg["loss"]["name"],
         lr=cfg["experiment"]["learning_rate"],
+        use_scheduler=cfg["experiment"]["use_scheduler"],
     )
 
     # mlflow
@@ -73,7 +74,7 @@ def main(cfg: DictConfig) -> None:
         tags=[cfg["model"]["name"], cfg["loss"]["name"]],
     )
     mlflow_logger = MLFlowLogger(experiment_name=cfg["experiment"]["name"])
-    
+
     # log yaml configs
     wandb_logger.experiment.config["config"] = cfg
 
@@ -115,24 +116,28 @@ def main(cfg: DictConfig) -> None:
     # test
     trainer.test(model, data_module)
 
-    # model path
-    model_path = "artifacts/model.pth"
-    # save model
-    torch.save(model, model_path)
+    # conditional logging of artifacts
+    if cfg["experiment"]["log_artifacts"]:
+        # model path
+        model_path = "artifacts/model.pth"
+        # save model
+        torch.save(model, model_path)
 
-    # # load model
-    model = torch.load(model_path)
+        # # load model
+        model = torch.load(model_path)
 
-    data_module.setup()
+        data_module.setup()
 
-    # Training predictions
-    predict_and_log(model, data_module.train_dataloader(), "Train", wandb_logger, cfg)
+        # Training predictions
+        predict_and_log(
+            model, data_module.train_dataloader(), "Train", wandb_logger, cfg
+        )
 
-    # Validation predictions
-    predict_and_log(model, data_module.val_dataloader(), "Valid", wandb_logger, cfg)
+        # Validation predictions
+        predict_and_log(model, data_module.val_dataloader(), "Valid", wandb_logger, cfg)
 
-    # Test predictions
-    predict_and_log(model, data_module.test_dataloader(), "Test", wandb_logger, cfg)
+        # Test predictions
+        predict_and_log(model, data_module.test_dataloader(), "Test", wandb_logger, cfg)
 
 
 def predict_and_log(model, dataloader, title, logger, cfg):

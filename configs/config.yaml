@@ -24,3 +24,6 @@ experiment:
   accelerator: cuda # cpu, cuda, or mps
   devices: auto
   random_seed: 42
+
+  use_scheduler: True
+  log_artifacts: True
