@@ -57,7 +57,7 @@ def split_data(
 
 if __name__ == "__main__":
     # load data
-    dataset_path = "data/RudrakshaDataset"
+    dataset_path = "data/sem-activated-carbon-dataset"
     images, masks = load_data(dataset_path)
 
     print("Number of images:", len(images))

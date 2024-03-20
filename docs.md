@@ -29,7 +29,7 @@ In this project, a seed value of 42 is utilized to ensure result reproducibility
 
 #### Data Distribution
 
-The dataset resides at data/RudrakshaDataset, containing:
+The dataset resides at data/sem-activated-carbon-dataset, containing:
 Number of images: 128
 Number of masks: 128
 
@@ -69,7 +69,7 @@ In this project, model is made based on lighting module. We have used Lightning 
 In side of the Lightining modlue we have imported our opytorch model class which comes based on the model factory. It is a factory design pattern which helps us to create different models based on the configuration. We can create different models by changing the
 name of the model that we want to load from the availabe models.
 
-Our `RudrakshaSegModel` `class is a subclass of`LightningModule` class. It takes following parameters:
+Our `SEMSegModel` `class is a subclass of`LightningModule` class. It takes following parameters:
 
 1. model_name: The name of the model to use.
    We have our custom model defned from scratch and other models loaded from smp library and monai library. We have also used few of the opensouce models from github.
