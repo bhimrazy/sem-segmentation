@@ -66,7 +66,7 @@ Accurate measurement of the microspores, mesopores, and macropores on the surfac
    ```
 
 ### Dataset Preparation
-Dataset: [Google Drive Link](https://drive.google.com/file/d/1tDXtqwsaPsLEi0lWL3ONM68lgyJEfLC0) 
+Dataset: [Google Drive Link](https://drive.google.com/file/d/1arcACo6jnXPurgLeVfFkm-jsyvkHhhZK) 
 
 To prepare the dataset, run the following command:\
 It will download the dataset from google drive and extract it to `data/` directory.
