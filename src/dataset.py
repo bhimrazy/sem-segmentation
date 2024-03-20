@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
 
-class RudrakshaDataset(Dataset):
+class SEMDataset(Dataset):
     def __init__(self, images, masks, transform=None):
         self.images = images
         self.masks = masks
@@ -23,7 +23,7 @@ class RudrakshaDataset(Dataset):
         return image, mask
 
 
-class RudrakshaDataModule(LightningDataModule):
+class SEMDataModule(LightningDataModule):
     def __init__(
         self,
         X_train,
@@ -51,13 +51,13 @@ class RudrakshaDataModule(LightningDataModule):
         )
 
     def setup(self, stage=None):
-        self.train_dataset = RudrakshaDataset(
+        self.train_dataset = SEMDataset(
             self.X_train, self.y_train, self.transform
         )
-        self.valid_dataset = RudrakshaDataset(
+        self.valid_dataset = SEMDataset(
             self.X_valid, self.y_valid, self.transform
         )
-        self.test_dataset = RudrakshaDataset(self.X_test, self.y_test, self.transform)
+        self.test_dataset = SEMDataset(self.X_test, self.y_test, self.transform)
 
     def train_dataloader(self):
         return DataLoader(

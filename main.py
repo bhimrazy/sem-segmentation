@@ -14,9 +14,9 @@ from lightning.pytorch.loggers import MLFlowLogger, WandbLogger
 from omegaconf import DictConfig
 
 import wandb
-from src.dataset import RudrakshaDataModule
+from src.dataset import SEMDataModule
 from src.io import load_data
-from src.model import RudrakshaSegModel
+from src.model import SEMSegModel
 from src.utils import split_data
 from src.viz import plot_predictions
 
@@ -40,7 +40,7 @@ def main(cfg: DictConfig) -> None:
     )
 
     # data module
-    data_module = RudrakshaDataModule(
+    data_module = SEMDataModule(
         X_train,
         y_train,
         X_valid,
@@ -53,7 +53,7 @@ def main(cfg: DictConfig) -> None:
     )
 
     # model
-    model = RudrakshaSegModel(
+    model = SEMSegModel(
         model_name=cfg["model"]["name"],
         smp_encoder=cfg["model"]["smp_encoder"],
         num_classes=cfg["model"]["num_classes"],
@@ -93,7 +93,7 @@ def main(cfg: DictConfig) -> None:
     checkpoint_callback = ModelCheckpoint(
         monitor="val_loss",
         dirpath="checkpoints/",
-        filename="rudraksha-{epoch:02d}-{val_loss:.2f}",
+        filename="sem-{epoch:02d}-{val_loss:.2f}",
         save_top_k=3,
         mode="min",
         verbose=True,

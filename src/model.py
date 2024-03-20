@@ -31,7 +31,7 @@ class LossFactory:
             raise NotImplementedError(f"{name} is not implemented")
 
 
-class RudrakshaSegModel(LightningModule):
+class SEMSegModel(LightningModule):
     def __init__(
         self, model_name, smp_encoder, num_classes, loss_fn, lr=1e-4, use_scheduler=True
     ):

@@ -3,20 +3,20 @@ import wandb
 import torch
 import argparse
 from lightning import seed_everything
-from src.model import RudrakshaSegModel
-from src.dataset import RudrakshaDataModule
+from src.model import SEMSegModel
+from src.dataset import SEMDataModule
 from src.io import load_data
 from src.utils import split_data
 from os.path import join
 import matplotlib.pyplot as plt
 
 
-parser = argparse.ArgumentParser(description="Rudraksha Segmentation Evaluation")
+parser = argparse.ArgumentParser(description="SEM Segmentation Evaluation")
 parser.add_argument("-m", "--model", default="UNet", type=str, help="model name")
 parser.add_argument(
     "-r",
     "--modelreg",
-    default="rudraksha-segmentation/Semantic Segmentation UNet lr_fixed/model-4jgahlq4:v0",
+    default="",
     type=str,
     help="WandB model registry",
 )
@@ -29,11 +29,11 @@ run = wandb.init(project="evaluation")
 
 
 cfg = {
-    "data": {"data_dir": "data", "dataset_folder": "RudrakshaDataset"},
+    "data": {"data_dir": "data", "dataset_folder": "sem-activated-carbon-dataset"},
     "model": {"name": args.model, "num_classes": 1, "smp_encoder": args.encoder},
     "loss": {"name": "GeneralizedDiceLoss"},
     "experiment": {
-        "name": "Rudraksha Segmentation",
+        "name": "SEM Segmentation",
         "num_epochs": 100,
         "patience": 20,
         "image_size": 256,
@@ -59,7 +59,7 @@ checkpoint_path = os.path.join(artifact_dir, "model.ckpt")
 # Load the model
 checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
 
-model = RudrakshaSegModel(
+model = SEMSegModel(
     model_name=cfg["model"]["name"],
     num_classes=1,
     smp_encoder=cfg["model"]["smp_encoder"],
@@ -84,7 +84,7 @@ X_train, X_valid, X_test, y_train, y_valid, y_test = split_data(
 )
 
 # data module
-data_module = RudrakshaDataModule(
+data_module = SEMDataModule(
     X_train,
     y_train,
     X_valid,
