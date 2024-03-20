@@ -8,13 +8,13 @@ import sys
 from decouple import config
 
 # Load environment variables
-RUDRAKSHA_DATASET_ID = config("RUDRAKSHA_DATASET_ID")
-if RUDRAKSHA_DATASET_ID is None:
-    raise ValueError("RUDRAKSHA_DATASET_ID not found in .env file")
+DATASET_ID = config("DATASET_ID")
+if DATASET_ID is None:
+    raise ValueError("DATASET_ID not found in .env file")
 
 # Define dataset IDs
 DATASET_IDS = {
-    "rudraksha": RUDRAKSHA_DATASET_ID,
+    "sem-dataset": DATASET_ID,
 }
 
 
@@ -60,7 +60,7 @@ def main():
         "-d",
         "--dataset",
         type=str,
-        default="rudraksha",
+        default="sem-dataset",
         help="Dataset to download. Available datasets are: otitis-media, oral-cancer, and genetics",  # noqa: E501
     )
     parser.add_argument(

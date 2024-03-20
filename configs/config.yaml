@@ -1,8 +1,8 @@
 project:
-  name: Rudrakhsa Segmentation Project
+  name: SEM Segmentation Project
 data:
   data_dir: data
-  dataset_folder: RudrakshaDataset
+  dataset_folder: sem-activated-carbon-dataset
 
 model:
   name: UNet
@@ -13,7 +13,7 @@ loss:
   name: GeneralizedDiceLoss
 
 experiment:
-  name: Rudraksha Segmentation
+  name: SEM Segmentation
   num_epochs: 100
   patience: 20
   image_size: 256
