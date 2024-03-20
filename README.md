@@ -37,6 +37,7 @@ The Rudraksha Segmentation Project focuses on accurate segmentation of individua
    Then add the value for `RUDRAKSHA_DATASET_ID` in `.env` file.
 
 ### Dataset Preparation
+Dataset: [Google Drive Link](https://drive.google.com/file/d/1tDXtqwsaPsLEi0lWL3ONM68lgyJEfLC0) 
 
 To prepare the dataset, run the following command:\
 It will download the dataset from google drive and extract it to `data/` directory.
