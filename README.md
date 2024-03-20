@@ -1,8 +1,39 @@
-# Rudraksha Segmentation Project
+# A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in Scanning Electron Microscope Images of Activated Carbon
+<details>
+<summary><strong>Authors</strong></summary>
 
-## Introduction
+- **Bishwas Pokharel**  
+  - Department of Electronics and Computer Engineering, Pulchowk Campus, Institute of Engineering, Tribhuvan University, Kathmandu 44700, Nepal  
+  - Email: [pokharel09.bsws@gmail.com](mailto:pokharel09.bsws@gmail.com)  
+  - Corresponding author
 
-The Rudraksha Segmentation Project focuses on accurate segmentation of individual Rudraksha dark spot in images. Leveraging advanced deep learning models, the project contributes to the field of image analysis and cultural studies.
+- **Anjuli Sapkota**  
+  - Department of Civil Engineering, Pulchowk Campus, IOE, Tribhuvan University, Nepal  
+  - Email: [anjulisapkota95@gmail.com](mailto:anjulisapkota95@gmail.com)  
+
+- **Bhimraj Yadav**  
+  - Software Engineer, Fetchly, LLC. Austin, Texas  
+  - Email: [bhimrajyadav977@gmail.com](mailto:bhimrajyadav977@gmail.com)  
+
+- **Vasanta Gurung**  
+  - Materials Science Engineering, College of Engineering, University of North Texas, Discovery Park, Denton, TX, 76207, USA  
+  - Email: [vasantagurung@my.unt.edu](mailto:vasantagurung@my.unt.edu)  
+
+- **Mandira Pradhananga Adhikari**  
+  - Central Department of Chemistry, Tribhuvan University, Kirtipur, Kathmandu 44613, Nepal  
+  - Email: [mandira43@hotmail.com](mailto:mandira43@hotmail.com)  
+
+- **Nanda Bikram Adhikari**  
+  - Department of Electronics and Computer Engineering, Pulchowk Campus, Institute of Engineering, Tribhuvan University, Kathmandu 44700, Nepal  
+  - Email: [adhikari@ioe.edu.np](mailto:adhikari@ioe.edu.np)  
+  - Corresponding author
+
+</details>
+
+
+## ABSTRACT
+
+Accurate measurement of the microspores, mesopores, and macropores on the surface of the activated carbon is essential due to its direct influence on the material’s adsorption capacity, surface area, and overall performance in various applications like water purification, air filtration, and gas separation. Traditionally, Scanning Electron Microscopy (SEM) images of activated carbons are collected and manually annotated by a human expert to differentiate and measure different pores on the surface. However, manual analysis of such surfaces is costly, time-consuming, and resource-intensive, as it requires expert supervision. In this paper, we propose an automatic deep-learning-based solution to address this challenge of activated carbon surface segmentation. Our deep-learning approach optimizes pore analysis by reducing time and resources, eliminating human subjectivity, and effectively adapting to diverse pore structures and imaging conditions. We introduce a novel SEM image segmentation dataset for activated carbon, comprising 128 images that capture the variability in pore sizes, structures, and imaging artifacts. Challenges encountered during dataset creation, irregularities in pore structures, and the presence of impurities were addressed to ensure robust model performance. We then evaluate the state-of-the-art deep learning models on the novel semantic segmentation task that shows promising results. Notably, DeepLabV3Plus, DeepLabV3, and FPN emerge as the most promising models based on semantic segmentation test results, with DeepLabV3Plus achieving the highest test Dice coefficient of 68.678%. Finally, we explore the optimization of learning rates for each model, outline the key research challenges, and discuss potential research directions to address these challenges.
 
 ## Getting Started
 
@@ -84,10 +115,6 @@ Available models with their keys in the factroy are:
 - `artifacts/`: Contains trained model checkpoints and prediction images.
 - `main.py`: Main training script.
 - `requirements.txt`: List of required packages.
-
-## Contributing
-
-If you'd like to contribute to this project, feel free to open an issue or submit a pull request.
 
 ## License
 
