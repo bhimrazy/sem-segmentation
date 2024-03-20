@@ -42,8 +42,8 @@ Accurate measurement of the microspores, mesopores, and macropores on the surfac
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/bhimrazy/rudraksha-segmentation.git
-   cd rudraksha-segmentation
+   git clone https://github.com/bhimrazy/sem-segmentation.git
+   cd sem-segmentation
    ```
 
 2. Set up a virtual environment and activate it:
@@ -64,8 +64,6 @@ Accurate measurement of the microspores, mesopores, and macropores on the surfac
    ```bash
    cp .env.example .env
    ```
-
-   Then add the value for `RUDRAKSHA_DATASET_ID` in `.env` file.
 
 ### Dataset Preparation
 Dataset: [Google Drive Link](https://drive.google.com/file/d/1tDXtqwsaPsLEi0lWL3ONM68lgyJEfLC0) 
