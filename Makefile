@@ -1,7 +1,3 @@
-# Variables
-PYTHON = python
-MAIN_SCRIPT = main.py
-
 # Default target: Help Message
 help:
 	@echo "Usage: make <target>"
@@ -10,8 +6,8 @@ help:
 
 # Download data
 dataset:
-	$(PYTHON) scripts/download_datasets.py
+	python scripts/download_datasets.py
 
 # Run the main script
 run:
-	$(PYTHON) $(MAIN_SCRIPT)
+	python main.py
