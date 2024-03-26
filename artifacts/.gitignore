@@ -4,6 +4,8 @@
 *.png
 *.jpg
 *.pth
+*.pkl
+*.pt
 
 __pycache__
 __MACOSX
