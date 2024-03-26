@@ -170,3 +170,5 @@ mlruns
 lightning_logs
 wandb
 outputs
+
+
