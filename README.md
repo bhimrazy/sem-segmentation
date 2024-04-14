@@ -1,34 +1,17 @@
 # A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in Scanning Electron Microscope Images of Activated Carbon
-<details>
-<summary><strong>Authors</strong></summary>
+```
+@ARTICLE{10478488,
+  author={Pokharel, Bishwas and Pandey, Deep Shankar and Sapkota, Anjuli and Yadav, Bhimraj and Gurung, Vasanta and Adhikari, Mandira Pradhananga and Regmi, Lok Nath and Adhikari, Nanda Bikram},
+  journal={IEEE Access}, 
+  title={A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in Scanning Electron Microscope Images of Activated Carbon}, 
+  year={2024},
+  volume={12},
+  number={},
+  pages={50217-50243},
+  keywords={Scanning electron microscopy;Carbon;Imaging;Analytical models;Deep learning;Data models;Transmission electron microscopy;Semantic segmentation;SEM images;activated carbon;ground truth;Adam optimizer;intersection over union;dice coefficient},
+  doi={10.1109/ACCESS.2024.3381523}}
 
-- **Bishwas Pokharel**  
-  - Department of Electronics and Computer Engineering, Pulchowk Campus, Institute of Engineering, Tribhuvan University, Kathmandu 44700, Nepal  
-  - Email: [pokharel09.bsws@gmail.com](mailto:pokharel09.bsws@gmail.com)  
-  - Corresponding author
-
-- **Anjuli Sapkota**  
-  - Department of Civil Engineering, Pulchowk Campus, IOE, Tribhuvan University, Nepal  
-  - Email: [anjulisapkota95@gmail.com](mailto:anjulisapkota95@gmail.com)  
-
-- **Bhimraj Yadav**  
-  - Software Engineer, Fetchly, LLC. Austin, Texas  
-  - Email: [bhimrajyadav977@gmail.com](mailto:bhimrajyadav977@gmail.com)  
-
-- **Vasanta Gurung**  
-  - Materials Science Engineering, College of Engineering, University of North Texas, Discovery Park, Denton, TX, 76207, USA  
-  - Email: [vasantagurung@my.unt.edu](mailto:vasantagurung@my.unt.edu)  
-
-- **Mandira Pradhananga Adhikari**  
-  - Central Department of Chemistry, Tribhuvan University, Kirtipur, Kathmandu 44613, Nepal  
-  - Email: [mandira43@hotmail.com](mailto:mandira43@hotmail.com)  
-
-- **Nanda Bikram Adhikari**  
-  - Department of Electronics and Computer Engineering, Pulchowk Campus, Institute of Engineering, Tribhuvan University, Kathmandu 44700, Nepal  
-  - Email: [adhikari@ioe.edu.np](mailto:adhikari@ioe.edu.np)  
-  - Corresponding author
-
-</details>
+```
 
 
 ## ABSTRACT
