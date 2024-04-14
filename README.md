@@ -1,4 +1,9 @@
 # A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in Scanning Electron Microscope Images of Activated Carbon
+
+## ABSTRACT
+
+Accurate measurement of the microspores, mesopores, and macropores on the surface of the activated carbon is essential due to its direct influence on the material’s adsorption capacity, surface area, and overall performance in various applications like water purification, air filtration, and gas separation. Traditionally, Scanning Electron Microscopy (SEM) images of activated carbons are collected and manually annotated by a human expert to differentiate and measure different pores on the surface. However, manual analysis of such surfaces is costly, time-consuming, and resource-intensive, as it requires expert supervision. In this paper, we propose an automatic deep-learning-based solution to address this challenge of activated carbon surface segmentation. Our deep-learning approach optimizes pore analysis by reducing time and resources, eliminating human subjectivity, and effectively adapting to diverse pore structures and imaging conditions. We introduce a novel SEM image segmentation dataset for activated carbon, comprising 128 images that capture the variability in pore sizes, structures, and imaging artifacts. Challenges encountered during dataset creation, irregularities in pore structures, and the presence of impurities were addressed to ensure robust model performance. We then evaluate the state-of-the-art deep learning models on the novel semantic segmentation task that shows promising results. Notably, DeepLabV3Plus, DeepLabV3, and FPN emerge as the most promising models based on semantic segmentation test results, with DeepLabV3Plus achieving the highest test Dice coefficient of 68.678%. Finally, we explore the optimization of learning rates for each model, outline the key research challenges, and discuss potential research directions to address these challenges.
+
 ```
 @ARTICLE{10478488,
   author={Pokharel, Bishwas and Pandey, Deep Shankar and Sapkota, Anjuli and Yadav, Bhimraj and Gurung, Vasanta and Adhikari, Mandira Pradhananga and Regmi, Lok Nath and Adhikari, Nanda Bikram},
@@ -10,13 +15,7 @@
   pages={50217-50243},
   keywords={Scanning electron microscopy;Carbon;Imaging;Analytical models;Deep learning;Data models;Transmission electron microscopy;Semantic segmentation;SEM images;activated carbon;ground truth;Adam optimizer;intersection over union;dice coefficient},
   doi={10.1109/ACCESS.2024.3381523}}
-
 ```
-
-
-## ABSTRACT
-
-Accurate measurement of the microspores, mesopores, and macropores on the surface of the activated carbon is essential due to its direct influence on the material’s adsorption capacity, surface area, and overall performance in various applications like water purification, air filtration, and gas separation. Traditionally, Scanning Electron Microscopy (SEM) images of activated carbons are collected and manually annotated by a human expert to differentiate and measure different pores on the surface. However, manual analysis of such surfaces is costly, time-consuming, and resource-intensive, as it requires expert supervision. In this paper, we propose an automatic deep-learning-based solution to address this challenge of activated carbon surface segmentation. Our deep-learning approach optimizes pore analysis by reducing time and resources, eliminating human subjectivity, and effectively adapting to diverse pore structures and imaging conditions. We introduce a novel SEM image segmentation dataset for activated carbon, comprising 128 images that capture the variability in pore sizes, structures, and imaging artifacts. Challenges encountered during dataset creation, irregularities in pore structures, and the presence of impurities were addressed to ensure robust model performance. We then evaluate the state-of-the-art deep learning models on the novel semantic segmentation task that shows promising results. Notably, DeepLabV3Plus, DeepLabV3, and FPN emerge as the most promising models based on semantic segmentation test results, with DeepLabV3Plus achieving the highest test Dice coefficient of 68.678%. Finally, we explore the optimization of learning rates for each model, outline the key research challenges, and discuss potential research directions to address these challenges.
 
 ## Getting Started
 
